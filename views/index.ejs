@@ -1,48 +1,416 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
-  <body>
-    <h3>Selamat datang di Praktikum TCC pertemuan 5</h3>
-    <div>Daftar Endpoint API: ABRAR</div>
-    <table border="1">
-      <thead>
-        <tr>
-          <td>Metode</td>
-          <td>Endpoint</td>
-          <td>Deskripsi</td>
-        </tr>
-      </thead>
-      <tbody style="font-family: monospace">
-        <tr>
-          <td>GET</td>
-          <td>/users</td>
-          <td>Mengambil seluruh data dari tabel users.</td>
-        </tr>
-        <tr>
-          <td>GET</td>
-          <td>/users/:id</td>
-          <td>Mengambil data dari tabel users berdasarkan id.</td>
-        </tr>
-        <tr>
-          <td>POST</td>
-          <td>/add-user</td>
-          <td>Menambahkan data baru ke tabel users.</td>
-        </tr>
-        <tr>
-          <td>PUT</td>
-          <td>/edit-user/:id</td>
-          <td>Mengubah data dari tabel users berdasarkan id.</td>
-        </tr>
-        <tr>
-          <td>DELETE</td>
-          <td>/delete-user/:id</td>
-          <td>Menghapus data dari tabel users berdasarkan id.</td>
-        </tr>
-      </tbody>
-    </table>
-  </body>
-</html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Praktikum TCC</title>
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!-- Google Fonts CDN - SF Pro inspired font -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/inter-ui/3.19.3/inter.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    
+    :root {
+      --ios-bg: #f2f2f6;
+      --glass-bg: rgba(255, 255, 255, 0.65);
+      --ios-primary: #007aff;
+      --ios-success: #34c759;
+      --ios-warning: #ff9500;
+      --ios-danger: #ff3b30;
+    }
+    
+    body {
+      min-height: 100vh;
+      padding: 20px;
+      background-color: var(--ios-bg);
+      background-image: url('https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&q=80');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+    
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.25);
+      z-index: -1;
+    }
+    
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .app-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 30px;
+      padding: 10px 20px;
+      border-radius: 16px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .app-title {
+      font-weight: 600;
+      font-size: 1.2rem;
+      color: #1c1c1e;
+    }
+    
+    .card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 25px;
+      margin-bottom: 25px;
+    }
+    
+    .card-header {
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    
+    h1 {
+      font-size: 24px;
+      font-weight: 700;
+      color: #1c1c1e;
+      margin-bottom: 12px;
+    }
+    
+    .subtitle {
+      font-size: 16px;
+      color: #636366;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .tag {
+      background-color: rgba(0, 122, 255, 0.2);
+      color: var(--ios-primary);
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    
+    thead {
+      background-color: rgba(0, 0, 0, 0.03);
+    }
+    
+    th, td {
+      padding: 16px;
+      text-align: left;
+    }
+    
+    td {
+      border-top: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    
+    th {
+      font-weight: 600;
+      color: #8e8e93;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    
+    tbody tr {
+      background-color: transparent;
+      transition: background-color 0.2s;
+    }
+    
+    tbody tr:hover {
+      background-color: rgba(0, 0, 0, 0.02);
+    }
+    
+    .method {
+      width: 78px;
+      text-align: center;
+      padding: 6px 0;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      display: inline-block;
+    }
+    
+    .get {
+      background-color: rgba(52, 199, 89, 0.15);
+      color: var(--ios-success);
+    }
+    
+    .post {
+      background-color: rgba(0, 122, 255, 0.15);
+      color: var(--ios-primary);
+    }
+    
+    .put {
+      background-color: rgba(255, 149, 0, 0.15);
+      color: var(--ios-warning);
+    }
+    
+    .delete {
+      background-color: rgba(255, 59, 48, 0.15);
+      color: var(--ios-danger);
+    }
+    
+    .endpoint {
+      font-family: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+      background-color: rgba(0, 0, 0, 0.03);
+      padding: 6px 12px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    
+    .description {
+      color: #3a3a3c;
+      font-size: 14px;
+    }
+    
+    footer {
+      text-align: center;
+      color: #8e8e93;
+      margin-top: 30px;
+      font-size: 14px;
+      opacity: 0.8;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.3);
+      padding: 15px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    /* iOS styled switches for light/dark mode */
+    .switch-wrapper {
+      display: flex;
+      align-items: center;
+    }
+    
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 51px;
+      height: 31px;
+      margin-left: 10px;
+    }
+    
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #e9e9eb;
+      transition: .4s;
+      border-radius: 34px;
+    }
+    
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 27px;
+      width: 27px;
+      left: 2px;
+      bottom: 2px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+    }
+    
+    input:checked + .slider {
+      background-color: var(--ios-primary);
+    }
+    
+    input:checked + .slider:before {
+      transform: translateX(20px);
+    }
+    
+    .icon {
+      font-size: 20px;
+      color: #8e8e93;
+    }
+    
+    .bg-selector {
+      position: absolute;
+      top: 30px;
+      right: 30px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 16px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      z-index: 100;
+      display: none;
+    }
+    
+    .bg-option {
+      width: 50px;
+      height: 50px;
+      border-radius: 10px;
+      cursor: pointer;
+      background-size: cover;
+      background-position: center;
+      border: 2px solid transparent;
+    }
+    
+    .bg-option.active {
+      border-color: var(--ios-primary);
+    }
+    
+    .bg-toggle {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: var(--ios-primary);
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        padding: 10px;
+      }
+      
+      .card {
+        padding: 15px;
+      }
+      
+      table {
+        display: block;
+        overflow-x: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="app-bar">
+      <div class="app-title">Praktikum TCC</div>
+      <div class="switch-wrapper">
+        <i class="icon fa-solid fa-moon"></i>
+        <label class="switch">
+          <input type="checkbox">
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
+    
+    <div class="bg-toggle">
+      <i class="fa-solid fa-image"></i>
+      <span>Change Background</span>
+    </div>
+    
+    <div class="bg-selector">
+      <div class="bg-option active" data-bg="https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&q=80" style="background-image: url('https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&q=80&w=50')"></div>
+      <div class="bg-option" data-bg="https://images.unsplash.com/photo-1512273222628-4daea6e55abb?auto=format&fit=crop&q=80" style="background-image: url('https://images.unsplash.com/photo-1512273222628-4daea6e55abb?auto=format&fit=crop&q=80&w=50')"></div>
+      <div class="bg-option" data-bg="https://images.unsplash.com/photo-1557682224-5b8590cd9ec5?auto=format&fit=crop&q=80" style="background-image: url('https://images.unsplash.com/photo-1557682224-5b8590cd9ec5?auto=format&fit=crop&q=80&w=50')"></div>
+      <div class="bg-option" data-bg="https://images.unsplash.com/photo-1502239608882-93b729c6af43?auto=format&fit=crop&q=80" style="background-image: url('https://images.unsplash.com/photo-1502239608882-93b729c6af43?auto=format&fit=crop&q=80&w=50')"></div>
+    </div>
+    
+    <div class="card">
+      <div class="card-header">
+        <h1>API Documentation</h1>
+        <div class="subtitle">
+          Daftar Endpoint API <span class="tag">ABRAR</span>
+        </div>
+      </div>
+      
+      <table>
+        <thead>
+          <tr>
+            <th>Metode</th>
+            <th>Endpoint</th>
+            <th>Deskripsi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="method get">GET</span></td>
+            <td><code class="endpoint">/users</code></td>
+            <td class="description">Mengambil seluruh data dari tabel users.</td>
+          </tr>
+          <tr>
+            <td><span class="method get">GET</span></td>
+            <td><code class="endpoint">/users/:id</code></td>
+            <td class="description">Mengambil data dari tabel users berdasarkan id.</td>
+          </tr>
+          <tr>
+            <td><span class="method post">POST</span></td>
+            <td><code class="endpoint">/add-user</code></td>
+            <td class="description">Menambahkan data baru ke tabel users.</td>
+          </tr>
+          <tr>
+            <td><span class="method put">PUT</span></td>
+            <td><code class="endpoint">/edit-user/:id</code></td>
+            <td class="description">Mengubah data dari tabel users berdasarkan id.</td>
+          </tr>
+          <tr>
+            <td><span class="method delete">DELETE</span></td>
+            <td><code class="endpoint">/delete-user/:id</code></td>
+            <td class="description">Menghapus data dari tabel users berdasarkan id.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <footer>
+      <p>Pertemuan 5 - Praktikum TCC &copy; 2025</p>
+    </footer>
+  </div>
+  
+  <script>
+    // Simple toggle for dark/light mode switch
+    const toggle = document.querySelector('input[type="checkbox"]');
+    const body = document.body;
+    
+    toggle.addEventListener('change', () => {
+      if (toggle.checked) {
+        document.documentElement.style.setProperty('--ios-bg', '#000000');
+        document.documentElement.style.setProperty('--glass-bg', 'rgba(30, 30, 30, 0.75)');
+        document.querySelector('.overlay').style.background = 'rgba(0, 0, 0, 0.5)
+      }
+  }
+</script>
